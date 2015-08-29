@@ -42,7 +42,7 @@ public class NetworkSim {
 			problocal = prob;
 			System.out.println("Rounds:" + (i + 1));
 			int lastroundsteps = 0;
-			while (problocal <= 1.0) {
+			while (problocal <= 1.01) {
 
 				l1 = new Lattice2D(dimention, degree, problocal,
 						new ComplexContagion(threshold));
@@ -93,7 +93,7 @@ public class NetworkSim {
 			problocal = prob;
 			System.out.println("Rounds:" + (i + 1));
 			int lastroundsteps = 0;
-			while (problocal <= 1.0) {
+			while (problocal <= 1.01) {
 
 				l1 = new Lattice2D(dimention, degree, problocal,
 						new RandomContagion(threshold, messageprod));
@@ -144,7 +144,7 @@ public class NetworkSim {
 			System.out.println("Rounds:" + (i + 1));
 			int lastroundsteps = 0;
 
-			while (problocal <= 1.0) {
+			while (problocal <= 1.01) {
 
 				l1 = new Lattice2D(dimention, degree, problocal,
 						new UniformContagion(threshold, offset));
@@ -200,7 +200,7 @@ public class NetworkSim {
 			
 			int lastroundsteps = 0;
 			
-			while (problocal <= 1.0) {
+			while (problocal <= 1.01) {
 
 				l1 = new Lattice2D(dimention, degree, problocal,
 						new NormalContagion(threshold, mean, variance));

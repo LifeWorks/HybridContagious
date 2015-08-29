@@ -7,7 +7,7 @@ public class UniformContagionSim extends NetworkSim {
 		UniformContagionSim ns = new UniformContagionSim();
 
 		
-		int threshold = 2;
+		int threshold = 5;
 		int numofcommunityseeds = 1;
 		int numofmessageseeds = 1;
 		int offset = 1;
