@@ -5,13 +5,13 @@ public class NormalContagionSim extends NetworkSim {
 
 		NormalContagionSim ns = new NormalContagionSim();
 
-		int threshold = 2;
+		int threshold = 10;
 		int numofcommunityseeds = 1;
 		int numofmessageseeds = 1;
-		int mean = 1;
-		int variance = 1;
+		int mean = 5;
+		int std = 5;
 		ns.simNormalContigions(threshold, numofcommunityseeds,
-				numofmessageseeds, mean, variance);
+				numofmessageseeds, mean, std);
 
 	}
 }

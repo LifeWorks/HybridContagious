@@ -9,14 +9,14 @@ import edu.penn.pennshape.Node;
 
 public class NormalContagion extends Contagion {
 	double mean = 0.0;
-	double variance =0.0;
+	double std =0.0;
 	NormalDistribution normaldist = null;
-	public NormalContagion(double threshold, double mean, double variance) {
+	public NormalContagion(double threshold, double mean, double std) {
 		random = new Random();
-		normaldist = new NormalDistribution();
+		normaldist = new NormalDistribution(mean, std);
 		this.threshold = threshold;
 		this.mean = mean;
-		this.variance=variance;
+		this.std=std;
 	}
 	
 	
@@ -31,6 +31,7 @@ public class NormalContagion extends Contagion {
 			if (checkmessagereceivedNeighbors(selectednode)) {
 				selectednode.setMessagereceived(true);
 				double offset = normaldist.sample();
+				System.out.println("Offset:"+offset);
 				if (offset<0){
 					offset=0;
 				}
