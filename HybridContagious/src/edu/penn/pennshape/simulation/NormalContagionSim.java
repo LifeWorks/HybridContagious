@@ -5,7 +5,7 @@ public class NormalContagionSim extends NetworkSim {
 
 		NormalContagionSim ns = new NormalContagionSim();
 
-		int threshold = 10;
+		int threshold = 2;
 		int numofcommunityseeds = 1;
 		int numofmessageseeds = 1;
 		int mean = 1;

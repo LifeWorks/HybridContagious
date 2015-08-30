@@ -5,7 +5,7 @@ public class ComplexContagionSim extends NetworkSim {
 
 		ComplexContagionSim ns = new ComplexContagionSim();
 
-		int threshold = 15;
+		int threshold = 3;
 		int numofcommunityseeds = 1;
 		int numofmessageseeds = 1;
 		ns.simComplexContigions(threshold, numofcommunityseeds,
