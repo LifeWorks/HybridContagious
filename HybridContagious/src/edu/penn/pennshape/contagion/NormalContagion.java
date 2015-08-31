@@ -31,7 +31,8 @@ public class NormalContagion extends Contagion {
 			if (checkmessagereceivedNeighbors(selectednode)) {
 				selectednode.setMessagereceived(true);
 				double offset = normaldist.sample();
-				System.out.println("Offset:"+offset);
+				//System.out.println("Offset:"+offset);
+				//System.out.println("SD:"+normaldist.getStandardDeviation()+" Mean:"+normaldist.getMean());
 				if (offset<0){
 					offset=0;
 				}
