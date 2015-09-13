@@ -5,10 +5,10 @@ public class RandomContagionSim extends NetworkSim {
 
 		RandomContagionSim ns = new RandomContagionSim();
 
-		int threshold = 10;
-		int numofcommunityseeds = 1;
+		int threshold = 5  ;
+		int numofcommunityseeds = 0;
 		int numofmessageseeds = 1;
-		double messageprod = 0.07;
+		double messageprod = 0.1;
 		ns.simRandomContigions(threshold, numofcommunityseeds,
 				numofmessageseeds, messageprod);
 

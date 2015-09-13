@@ -8,8 +8,8 @@ public class NormalContagionSim extends NetworkSim {
 		int threshold = 15;
 		int numofcommunityseeds = 1;
 		int numofmessageseeds = 1;
-		int mean = 5;
-		int std = 1;
+		int mean = 10;
+		int std = 4;
 		ns.simNormalContigions(threshold, numofcommunityseeds,
 				numofmessageseeds, mean, std);
 
