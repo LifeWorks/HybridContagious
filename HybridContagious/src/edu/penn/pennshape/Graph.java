@@ -1,5 +1,8 @@
 package edu.penn.pennshape;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -16,6 +19,9 @@ public abstract class Graph {
 	protected List<Node> uncontigiousnodes = null;
 	protected Contagion contagion = null;
 	Random random = null;
+
+	BufferedWriter bw = null;
+	FileWriter fw = null;
 
 	public abstract void generate();
 
@@ -57,33 +63,86 @@ public abstract class Graph {
 
 	}
 
-	public int Contagions(int max) {
+	public void printNeighborsToFile(int counter) {
+
+		try {
+
+			String FILENAME = "./pic/graph" + counter + ".txt";
+
+			fw = new FileWriter(FILENAME);
+			bw = new BufferedWriter(fw);
+			for (Node node : nodes) {
+				bw.append(node.getId() + "==" + node.getActived() + "\n");
+			}
+
+			for (Node node : nodes) {
+				for (Node neighbor : node.getNeighbors()) {
+					if (neighbor.getId() > node.getId()) {
+						bw.append(node.getId() + ":" + neighbor.getId() + "\n");
+					}
+				}
+			}
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			try {
+
+				if (bw != null)
+					bw.close();
+
+				if (fw != null)
+					fw.close();
+
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	public int Contagions(int maxrounds) {
 		random = new Random();
 		int count = 0;
 		contagion.setNodeThreshold(this);
 		int uncontigiousnodesize = uncontigiousnodes.size();
 
-		while (uncontigiousnodesize * 1.0 / size > 0.01 && count!=max) {
+		while (uncontigiousnodesize * 1.0 / size > 0.001 && count != maxrounds) {
+
+			contagion.start(uncontigiousnodes, unreceivedmessagenodes);
+			uncontigiousnodesize = uncontigiousnodes.size();
+			if (count % 200 == 0) {
+				System.out.println(count + ":" + (1 - uncontigiousnodesize * 1.0 / size));
+			}
+			if (count % 200 == 0) {
+				printNeighborsToFile(count);
+			}
+
+			count++;
+		}
+		printNeighborsToFile(count);
+		return count;
+	}
+	
+	
+	public double ContagionsAndGetActiveNodes(int maxrounds) {
+		random = new Random();
+		int count = 0;
+		contagion.setNodeThreshold(this);
+		int uncontigiousnodesize = uncontigiousnodes.size();
+
+		while (uncontigiousnodesize * 1.0 / size > 0.001 && count != maxrounds) {
 
 			contagion.start(uncontigiousnodes, unreceivedmessagenodes);
 			uncontigiousnodesize = uncontigiousnodes.size();
 			count++;
 		}
-		return count;
-		/*
-		 * for (Node node : graph) { if (node.getMessagereceived()) { for (Node
-		 * neighbor : node.getNeighbors()) { if (!neighbor.getMessagereceived())
-		 * { neighbor.setMessagereceived(true); double r = random.nextDouble();
-		 * if (r < messageprod) { neighbor.setActived(true); } } } }
-		 * 
-		 * if (!node.getActived()) { int activenodes =
-		 * countActiveNeighbors(node); if (activenodes >= threshold) {
-		 * node.setActived(true); count++; } }
-		 * 
-		 * 
-		 * } return count;
-		 */
+		return (1 - uncontigiousnodesize * 1.0 / size);
 	}
+
+	
 
 	public void setCommunitySeed(int community) {
 		for (int i = 0; i < community; i++) {

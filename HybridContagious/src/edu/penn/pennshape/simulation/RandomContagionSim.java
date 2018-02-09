@@ -5,12 +5,13 @@ public class RandomContagionSim extends NetworkSim {
 
 		RandomContagionSim ns = new RandomContagionSim();
 
-		int threshold = 5  ;
-		int numofcommunityseeds = 0;
+		int threshold = 10  ;
+		int numofcommunityseeds = 1;
 		int numofmessageseeds = 1;
-		double messageprod = 0.1;
-		ns.simRandomContigions(threshold, numofcommunityseeds,
+		double messageprod = 0.2;
+		for (int i = 1; i <= 20; i++) {
+		ns.simRandomContigions(i, numofcommunityseeds,
 				numofmessageseeds, messageprod);
-
+		}
 	}
 }
