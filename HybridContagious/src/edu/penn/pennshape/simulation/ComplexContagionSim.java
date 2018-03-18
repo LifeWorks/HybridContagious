@@ -8,9 +8,8 @@ public class ComplexContagionSim extends NetworkSim {
 		int threshold = 3;
 		int numofcommunityseeds = 1;
 		int numofmessageseeds = 1;
+		ns.simComplexContigions(threshold, numofcommunityseeds,
+				numofmessageseeds);
 
-		for (int i = 1; i <= 20; i++) {
-			ns.simComplexContigions(i, numofcommunityseeds, numofmessageseeds);
-		}
 	}
 }
