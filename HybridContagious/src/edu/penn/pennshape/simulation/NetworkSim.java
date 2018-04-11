@@ -24,12 +24,12 @@ import edu.penn.pennshape.graph.Lattice2D;
 
 public class NetworkSim {
 
-	public static int dimention = 400;
-	public static int degree = 48;
+	public static int dimention = 100;
+	public static int degree = 8;
 	//public static double prob = 0.00001;
     public static double prob = 0.001;
 	public static int max = 30000000;
-	public static int rounds = 1;
+	public static int rounds = 10;
 
 	public static double step = 1.1;
 
@@ -205,7 +205,7 @@ public class NetworkSim {
 				l1 = new Lattice2D(dimention, degree, problocal,
 						new NormalContagion(threshold, mean, variance));
 				l1.init(community, message);
-				System.out.print("Initilization Done!");
+				//System.out.print("Initilization Done!");
 
 				if (!hasht.containsKey(problocal)) {
 					valuelist = new ArrayList<Integer>();
