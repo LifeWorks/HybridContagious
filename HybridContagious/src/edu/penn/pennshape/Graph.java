@@ -64,14 +64,20 @@ public abstract class Graph {
 		int count = 0;
 		contagion.setNodeThreshold(this);
 		double saturationLevel = uncontigiousnodes.size() * 1.0 / size;
+		contagionLevels.add(0.0);
 		contagionLevels.add(1.0 - saturationLevel);
+		double saturationNew = saturationLevel;
 
 		while (saturationLevel > 0.01 && count!=max) {
 
 			contagion.start(uncontigiousnodes, unreceivedmessagenodes);
-			saturationLevel = uncontigiousnodes.size() * 1.0 / size;
+			saturationNew = uncontigiousnodes.size() * 1.0 / size;
 			count++;
-			contagionLevels.add(1.0 - saturationLevel);
+			if (saturationNew != saturationLevel) {
+				saturationLevel = saturationNew;
+				contagionLevels.add((double)count);
+				contagionLevels.add(1.0 - saturationLevel);
+			}
 		}
 		return count;
 		/*

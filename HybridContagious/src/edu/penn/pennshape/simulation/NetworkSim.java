@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+//import java.util.stream;
+
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
@@ -27,9 +29,9 @@ public class NetworkSim {
 	public static int dimention = 100;
 	public static int degree = 8;
 	//public static double prob = 0.00001;
-    public static double prob = 0.001;
+    public static double prob = 0.01;
 	public static int max = 30000000;
-	public static int rounds = 1;
+	public static int rounds = 100;
 
 	public static double step = 1.1;
 
@@ -54,7 +56,7 @@ public class NetworkSim {
 					valuelist = hasht.get(problocal);
 				}
 				int timesteps = l1.Contagions(max);
-				outputDynamics(l1,"complex",i,problocal);
+				outputDynamics(l1,"complex",i,problocal,threshold,0,0);
 				System.out.print(problocal);
 				System.out.println(" " + timesteps);
 				valuelist.add(timesteps);
@@ -107,7 +109,7 @@ public class NetworkSim {
 					valuelist = hasht.get(problocal);
 				}
 				int timesteps = l1.Contagions(max);
-				outputDynamics(l1,"random",i,problocal);
+				outputDynamics(l1,"random",i,problocal,threshold,messageprod,0);
 				System.out.print(problocal);
 				System.out.println(" " + timesteps);
 				valuelist.add(timesteps);
@@ -162,7 +164,7 @@ public class NetworkSim {
 					valuelist = hasht.get(problocal);
 				}
 				int timesteps = l1.Contagions(max);
-				outputDynamics(l1,"uniform",i,problocal);
+				outputDynamics(l1,"uniform",i,problocal,threshold,offset,0);
 				System.out.print(problocal);
 				System.out.println(" " + timesteps);
 				valuelist.add(timesteps);
@@ -194,19 +196,75 @@ public class NetworkSim {
 		StardardDeviationCalc(hasht, "uniform", map);
 	}
 
+//	public void simNormalContigions(int threshold, int community, int message,
+//			double mean, double variance) {
+//		Map<Double, List<Integer>> hasht = new TreeMap<Double, List<Integer>>();
+//		List<Integer> valuelist = null;
+//		Lattice2D l1 = null; // complex =3
+//		double problocal = prob;
+//		for (int i = 0; i < rounds; i++) {
+//			problocal = prob;
+//			System.out.println("Rounds:" + (i + 1));
+//			
+//			int lastroundsteps = 0;
+//			
+//			while (problocal <= 1.01) {
+//
+//				l1 = new Lattice2D(dimention, degree, problocal,
+//						new NormalContagion(threshold, mean, variance));
+//				l1.init(community, message);
+//				//System.out.print("Initialization Done!");
+//
+//				if (!hasht.containsKey(problocal)) {
+//					valuelist = new ArrayList<Integer>();
+//				} else {
+//					valuelist = hasht.get(problocal);
+//				}
+//				int timesteps = l1.Contagions(max);
+//				outputDynamics(l1,"normal",i,problocal,threshold,mean,variance);
+//				System.out.print(problocal);
+//				System.out.println(" " + timesteps);
+//				valuelist.add(timesteps);
+//				hasht.put(problocal, valuelist);
+//
+//				if (lastroundsteps == timesteps) {
+//					break;
+//				} else {
+//					lastroundsteps = timesteps;
+//				}
+//				
+//				if (problocal < 0.001) {
+//					problocal = problocal * step * 4;
+//				} else if ((problocal >= 0.92)) {
+//					problocal = problocal + 0.01;
+//				} else {
+//					problocal = problocal * step;
+//				}
+//
+//			}
+//		}
+//		Map<String, Double> map = new HashMap<String, Double>();
+//		map.put("threshold", (double) threshold);
+//		map.put("community", (double) community);
+//		map.put("message", (double) message);
+//		map.put("mean", (double) mean);
+//		map.put("variance", (double) variance);
+//		StardardDeviationCalc(hasht, "normal", map);
+//	}
+
 	public void simNormalContigions(int threshold, int community, int message,
 			double mean, double variance) {
 		Map<Double, List<Integer>> hasht = new TreeMap<Double, List<Integer>>();
 		List<Integer> valuelist = null;
 		Lattice2D l1 = null; // complex =3
 		double problocal = prob;
-		for (int i = 0; i < rounds; i++) {
-			problocal = prob;
-			System.out.println("Rounds:" + (i + 1));
-			
-			int lastroundsteps = 0;
-			
-			while (problocal <= 1.01) {
+
+		//problocal = prob;
+		//int lastroundsteps = 0;
+		
+		while (problocal <= 1.01) {
+			for (int i = 0; i < rounds; i++) {
+				//System.out.println("Rounds:" + (i + 1));
 
 				l1 = new Lattice2D(dimention, degree, problocal,
 						new NormalContagion(threshold, mean, variance));
@@ -219,27 +277,29 @@ public class NetworkSim {
 					valuelist = hasht.get(problocal);
 				}
 				int timesteps = l1.Contagions(max);
-				outputDynamics(l1,"normal",i,problocal);
-				System.out.print(problocal);
-				System.out.println(" " + timesteps);
+				outputDynamics(l1,"normal",i,problocal,threshold,mean,variance);
+
+				//System.out.println(" " + timesteps);
 				valuelist.add(timesteps);
-				hasht.put(problocal, valuelist);
 
-				if (lastroundsteps == timesteps) {
-					break;
-				} else {
-					lastroundsteps = timesteps;
-				}
+//				if (lastroundsteps == timesteps) {
+//					break;
+//				} else {
+//					lastroundsteps = timesteps;
+//				}
 				
-				if (problocal < 0.001) {
-					problocal = problocal * step * 4;
-				} else if ((problocal >= 0.92)) {
-					problocal = problocal + 0.01;
-				} else {
-					problocal = problocal * step;
-				}
-
 			}
+			
+			if (problocal < 0.001) {
+				problocal = problocal * step * 4;
+			} else if ((problocal >= 0.92)) {
+				problocal = problocal + 0.01;
+			} else {
+				problocal = problocal * step;
+			}
+			
+			System.out.print(problocal);
+			hasht.put(problocal, valuelist);
 		}
 		Map<String, Double> map = new HashMap<String, Double>();
 		map.put("threshold", (double) threshold);
@@ -249,7 +309,7 @@ public class NetworkSim {
 		map.put("variance", (double) variance);
 		StardardDeviationCalc(hasht, "normal", map);
 	}
-
+	
 	public void StardardDeviationCalc(Map<Double, List<Integer>> hasht,
 			String name, Map<String, Double> map) {
 
@@ -294,9 +354,9 @@ public class NetworkSim {
 		}
 	}
 	public void outputDynamics(Lattice2D graph2d,
-			String name, int round, double probability) {
+			String name, int round, double probability,double threshold,double mean,double std) {
 
-		String dirName = "data/" + name + "-" + dimention + "-" + degree + "/probability-" + probability;
+		String dirName = "data/" + name + "-" + dimention + "-" + degree + "-" + threshold + "-" + mean + "-" + std + "/probability-" + probability;
 		File directory = new File(dirName);
 		if (! directory.exists()) {
 			boolean success = directory.mkdirs();
@@ -308,13 +368,14 @@ public class NetworkSim {
 		String fileName = "dynamics-" + round + ".txt";
 		FileWriter writer = null;
 		ArrayList<Double> dynamics = graph2d.getDynamics();
-		int tf = dynamics.size();
+		int tf = /*(int)*/ dynamics.size() / 2;
 		try {
 			writer = new FileWriter(new File(dirName + "/" + fileName));
 			
 			for (int j = 0; j < tf; j++) {
-				double saturationLevel = dynamics.get(j);
-				writer.write(saturationLevel + "\n");
+				double timeStep = dynamics.get(2*j);
+				double saturationLevel = dynamics.get(2*j+1);
+				writer.write(timeStep + " " + saturationLevel + "\n");
 
 			}
 			writer.close();
