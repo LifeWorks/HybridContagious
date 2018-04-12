@@ -21,6 +21,7 @@ public class Lattice2D extends Graph {
 		this.unreceivedmessagenodes = new ArrayList<Node>();
 		this.contagion = contagion;
 		random = new Random();
+		this.contagionLevels = new ArrayList<Double>();
 	}
 
 	public void generate() {
@@ -87,6 +88,10 @@ public class Lattice2D extends Graph {
 
 		return (int) ((Math.sqrt(numSteps + 1) - 1) / 2);
 
+	}
+	
+	public ArrayList<Double> getDynamics() {
+		return(contagionLevels);
 	}
 
 	public int upIndex(int currentIndex, int numSteps) {

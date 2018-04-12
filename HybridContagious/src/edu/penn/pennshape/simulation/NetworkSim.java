@@ -29,7 +29,7 @@ public class NetworkSim {
 	//public static double prob = 0.00001;
     public static double prob = 0.001;
 	public static int max = 30000000;
-	public static int rounds = 10;
+	public static int rounds = 1;
 
 	public static double step = 1.1;
 
@@ -54,6 +54,7 @@ public class NetworkSim {
 					valuelist = hasht.get(problocal);
 				}
 				int timesteps = l1.Contagions(max);
+				outputDynamics(l1,"complex",i,problocal);
 				System.out.print(problocal);
 				System.out.println(" " + timesteps);
 				valuelist.add(timesteps);
@@ -74,6 +75,7 @@ public class NetworkSim {
 				}
 
 			}
+			
 		}
 		Map<String, Double> map = new HashMap<String, Double>();
 		map.put("threshold", (double) threshold);
@@ -105,6 +107,7 @@ public class NetworkSim {
 					valuelist = hasht.get(problocal);
 				}
 				int timesteps = l1.Contagions(max);
+				outputDynamics(l1,"random",i,problocal);
 				System.out.print(problocal);
 				System.out.println(" " + timesteps);
 				valuelist.add(timesteps);
@@ -124,6 +127,7 @@ public class NetworkSim {
 					problocal = problocal * step;
 				}
 			}
+			
 		}
 		Map<String, Double> map = new HashMap<String, Double>();
 		map.put("threshold", (double) threshold);
@@ -158,6 +162,7 @@ public class NetworkSim {
 					valuelist = hasht.get(problocal);
 				}
 				int timesteps = l1.Contagions(max);
+				outputDynamics(l1,"uniform",i,problocal);
 				System.out.print(problocal);
 				System.out.println(" " + timesteps);
 				valuelist.add(timesteps);
@@ -176,8 +181,9 @@ public class NetworkSim {
 				} else {
 					problocal = problocal * step;
 				}
-
+				
 			}
+			
 		}
 		Map<String, Double> map = new HashMap<String, Double>();
 		map.put("threshold", (double) threshold);
@@ -189,7 +195,7 @@ public class NetworkSim {
 	}
 
 	public void simNormalContigions(int threshold, int community, int message,
-			int mean, int variance) {
+			double mean, double variance) {
 		Map<Double, List<Integer>> hasht = new TreeMap<Double, List<Integer>>();
 		List<Integer> valuelist = null;
 		Lattice2D l1 = null; // complex =3
@@ -205,7 +211,7 @@ public class NetworkSim {
 				l1 = new Lattice2D(dimention, degree, problocal,
 						new NormalContagion(threshold, mean, variance));
 				l1.init(community, message);
-				//System.out.print("Initilization Done!");
+				//System.out.print("Initialization Done!");
 
 				if (!hasht.containsKey(problocal)) {
 					valuelist = new ArrayList<Integer>();
@@ -213,6 +219,7 @@ public class NetworkSim {
 					valuelist = hasht.get(problocal);
 				}
 				int timesteps = l1.Contagions(max);
+				outputDynamics(l1,"normal",i,problocal);
 				System.out.print(problocal);
 				System.out.println(" " + timesteps);
 				valuelist.add(timesteps);
@@ -258,7 +265,7 @@ public class NetworkSim {
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(new File("data/" + filename));
-
+			
 			for (Entry<Double, List<Integer>> entry : hasht.entrySet()) {
 				double prob = entry.getKey();
 				List<Integer> list = entry.getValue();
@@ -281,6 +288,35 @@ public class NetworkSim {
 
 			}
 
+			writer.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	public void outputDynamics(Lattice2D graph2d,
+			String name, int round, double probability) {
+
+		String dirName = "data/" + name + "-" + dimention + "-" + degree + "/probability-" + probability;
+		File directory = new File(dirName);
+		if (! directory.exists()) {
+			boolean success = directory.mkdirs();
+			if(! success) {
+				System.out.println(dirName + " is not created!\n");
+				
+			}
+		}
+		String fileName = "dynamics-" + round + ".txt";
+		FileWriter writer = null;
+		ArrayList<Double> dynamics = graph2d.getDynamics();
+		int tf = dynamics.size();
+		try {
+			writer = new FileWriter(new File(dirName + "/" + fileName));
+			
+			for (int j = 0; j < tf; j++) {
+				double saturationLevel = dynamics.get(j);
+				writer.write(saturationLevel + "\n");
+
+			}
 			writer.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();

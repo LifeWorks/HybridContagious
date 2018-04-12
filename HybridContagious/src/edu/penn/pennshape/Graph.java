@@ -2,6 +2,7 @@ package edu.penn.pennshape;
 
 import java.util.List;
 import java.util.Random;
+import java.util.ArrayList;
 
 import edu.penn.pennshape.contagion.Contagion;
 
@@ -16,6 +17,7 @@ public abstract class Graph {
 	protected List<Node> uncontigiousnodes = null;
 	protected Contagion contagion = null;
 	Random random = null;
+	protected ArrayList<Double> contagionLevels = null;
 
 	public abstract void generate();
 
@@ -61,13 +63,15 @@ public abstract class Graph {
 		random = new Random();
 		int count = 0;
 		contagion.setNodeThreshold(this);
-		int uncontigiousnodesize = uncontigiousnodes.size();
+		double saturationLevel = uncontigiousnodes.size() * 1.0 / size;
+		contagionLevels.add(1.0 - saturationLevel);
 
-		while (uncontigiousnodesize * 1.0 / size > 0.01 && count!=max) {
+		while (saturationLevel > 0.01 && count!=max) {
 
 			contagion.start(uncontigiousnodes, unreceivedmessagenodes);
-			uncontigiousnodesize = uncontigiousnodes.size();
+			saturationLevel = uncontigiousnodes.size() * 1.0 / size;
 			count++;
+			contagionLevels.add(1.0 - saturationLevel);
 		}
 		return count;
 		/*
