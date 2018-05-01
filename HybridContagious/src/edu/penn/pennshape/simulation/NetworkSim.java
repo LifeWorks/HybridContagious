@@ -111,8 +111,6 @@ public class NetworkSim {
 			} else {
 				problocal = problocal * step;
 			}
-			
-			System.out.print(problocal);
 		}
 	}
 
@@ -253,8 +251,6 @@ public class NetworkSim {
 			} else {
 				problocal = problocal * step;
 			}
-			
-			System.out.print(problocal);
 		}
 	}
 	
