@@ -10,6 +10,7 @@ public class NormalContagionSim2 extends NetworkSim {
 		int numofmessageseeds = 1;
 		double mean = 5;
 		double std = 0.0;
+		
 		for (int i=9;i<11;i++) {
 			for (int j=0;j<10;j++) {
 				if (i != 9 || j > 2) {

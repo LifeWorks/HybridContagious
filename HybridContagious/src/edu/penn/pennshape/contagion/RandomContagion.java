@@ -3,16 +3,22 @@ package edu.penn.pennshape.contagion;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.math3.distribution.NormalDistribution;
+
 import edu.penn.pennshape.Node;
 
 public class RandomContagion extends Contagion {
 
-	double messageprob = 0.0;
+	double mean = 0.0;
+	double std =0.0;
 
-	public RandomContagion(double threshold, double messageprob) {
+	NormalDistribution normaldist = null;
+	public RandomContagion(double threshold, double mean, double std) {
 		random = new Random();
+		normaldist = new NormalDistribution(mean, std);
 		this.threshold = threshold;
-		this.messageprob = messageprob;
+		this.mean = mean;
+		this.std=std;
 	}
 
 
@@ -26,11 +32,15 @@ public class RandomContagion extends Contagion {
 					.get(unreceivedmessagenodesidx);
 			if (checkmessagereceivedNeighbors(selectednode)) {
 				selectednode.setMessagereceived(true);
-				double r = random.nextDouble();
-				if (r < messageprob) {
+				double offset = normaldist.sample();
+				//System.out.println("Offset:"+offset);
+				//System.out.println("SD:"+normaldist.getStandardDeviation()+" Mean:"+normaldist.getMean());
+				if (offset >= selectednode.getThreshold()){
 					selectednode.setActived(true);
 				}
+				
 				unreceivedmessagenodes.remove(selectednode);
+
 			}
 		}
 	}

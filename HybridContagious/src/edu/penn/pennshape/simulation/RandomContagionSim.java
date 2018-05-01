@@ -8,9 +8,11 @@ public class RandomContagionSim extends NetworkSim {
 		int threshold = 5;
 		int numofcommunityseeds = 0;
 		int numofmessageseeds = 1;
-		double messageprod = 0.1;
+		double mean = 5;
+		double std = 0.0;
+		
 		ns.simRandomContigions(threshold, numofcommunityseeds,
-				numofmessageseeds, messageprod);
+				numofmessageseeds, mean, std);
 
 	}
 }

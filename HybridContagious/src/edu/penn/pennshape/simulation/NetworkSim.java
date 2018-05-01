@@ -88,19 +88,18 @@ public class NetworkSim {
 	}
 
 	public void simRandomContigions(int threshold, int community, int message,
-			double messageprod) {
+			double mean, double variance) {
 		Map<Double, List<Integer>> hasht = new TreeMap<Double, List<Integer>>();
 		List<Integer> valuelist = null;
 		Lattice2D l1 = null; // complex =3
 		double problocal = prob;
-		for (int i = 0; i < rounds; i++) {
-			problocal = prob;
-			System.out.println("Rounds:" + (i + 1));
-			int lastroundsteps = 0;
-			while (problocal <= 1.01) {
+		
+		while (problocal <= 1.01) {
+			for (int i = 0; i < rounds; i++) {
+				//System.out.println("Rounds:" + (i + 1));
 
 				l1 = new Lattice2D(dimention, degree, problocal,
-						new RandomContagion(threshold, messageprod));
+						new RandomContagion(threshold, mean, variance));
 				l1.init(community, message);
 
 				if (!hasht.containsKey(problocal)) {
@@ -109,33 +108,38 @@ public class NetworkSim {
 					valuelist = hasht.get(problocal);
 				}
 				int timesteps = l1.Contagions(max);
-				outputDynamics(l1,"random",i,problocal,threshold,messageprod,0);
-				System.out.print(problocal);
-				System.out.println(" " + timesteps);
-				valuelist.add(timesteps);
-				hasht.put(problocal, valuelist);
-
-				if (lastroundsteps == timesteps) {
-					break;
-				} else {
-					lastroundsteps = timesteps;
-				}
+				outputDynamics(l1,"random",i,problocal,threshold,mean,variance);
 				
-				if (problocal < 0.001) {
-					problocal = problocal * step * 4;
-				} else if ((problocal >= 0.92)) {
-					problocal = problocal + 0.01;
-				} else {
-					problocal = problocal * step;
-				}
+//				System.out.println(" " + timesteps);
+				valuelist.add(timesteps);
+				
+
+//				if (lastroundsteps == timesteps) {
+//					break;
+//				} else {
+//					lastroundsteps = timesteps;
+//				}
+
+			}
+				
+			if (problocal < 0.001) {
+				problocal = problocal * step * 4;
+			} else if ((problocal >= 0.92)) {
+				problocal = problocal + 0.01;
+			} else {
+				problocal = problocal * step;
 			}
 			
+			System.out.print(problocal);
+			hasht.put(problocal, valuelist);
 		}
+
 		Map<String, Double> map = new HashMap<String, Double>();
 		map.put("threshold", (double) threshold);
 		map.put("community", (double) community);
 		map.put("message", (double) message);
-		map.put("messageprod", (double) messageprod);
+		map.put("mean", (double) mean);
+		map.put("variance", (double) variance);
 		StardardDeviationCalc(hasht, "random", map);
 	}
 
