@@ -51,7 +51,9 @@ def getLastStep(directory):
                       filename + ' has wrong dimesion')
                 # sys.exit()
         lastSteps = np.array(lastSteps)
-        output.append([prob, np.mean(lastSteps, axis=0)[1], np.mean(
+        means = np.mean(lastSteps, axis=0)
+        stds = np.std(lastSteps, axis=0)
+        output.append([prob, means[1], stds[1], means[0], stds[0], np.amin(
             lastSteps, axis=0)[0], np.amax(lastSteps, axis=0)[0]])
     output = np.array(output)
     np.savetxt(outputfile, output[output[:, 0].argsort()])
