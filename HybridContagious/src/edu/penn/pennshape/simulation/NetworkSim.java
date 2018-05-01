@@ -89,36 +89,18 @@ public class NetworkSim {
 
 	public void simRandomContigions(int threshold, int community, int message,
 			double mean, double variance) {
-		Map<Double, List<Integer>> hasht = new TreeMap<Double, List<Integer>>();
-		List<Integer> valuelist = null;
 		Lattice2D l1 = null; // complex =3
 		double problocal = prob;
 		
 		while (problocal <= 1.01) {
 			for (int i = 0; i < rounds; i++) {
-				//System.out.println("Rounds:" + (i + 1));
 
 				l1 = new Lattice2D(dimention, degree, problocal,
 						new RandomContagion(threshold, mean, variance));
 				l1.init(community, message);
 
-				if (!hasht.containsKey(problocal)) {
-					valuelist = new ArrayList<Integer>();
-				} else {
-					valuelist = hasht.get(problocal);
-				}
-				int timesteps = l1.Contagions(max);
+				l1.Contagions(max);
 				outputDynamics(l1,"random",i,problocal,threshold,mean,variance);
-				
-//				System.out.println(" " + timesteps);
-				valuelist.add(timesteps);
-				
-
-//				if (lastroundsteps == timesteps) {
-//					break;
-//				} else {
-//					lastroundsteps = timesteps;
-//				}
 
 			}
 				
@@ -131,16 +113,7 @@ public class NetworkSim {
 			}
 			
 			System.out.print(problocal);
-			hasht.put(problocal, valuelist);
 		}
-
-		Map<String, Double> map = new HashMap<String, Double>();
-		map.put("threshold", (double) threshold);
-		map.put("community", (double) community);
-		map.put("message", (double) message);
-		map.put("mean", (double) mean);
-		map.put("variance", (double) variance);
-		StardardDeviationCalc(hasht, "random", map);
 	}
 
 	public void simUniformContigions(int threshold, int community, int message,
@@ -258,40 +231,19 @@ public class NetworkSim {
 
 	public void simNormalContigions(int threshold, int community, int message,
 			double mean, double variance) {
-		Map<Double, List<Integer>> hasht = new TreeMap<Double, List<Integer>>();
-		List<Integer> valuelist = null;
 		Lattice2D l1 = null; // complex =3
 		double problocal = prob;
-
-		//problocal = prob;
-		//int lastroundsteps = 0;
 		
 		while (problocal <= 1.01) {
 			for (int i = 0; i < rounds; i++) {
-				//System.out.println("Rounds:" + (i + 1));
 
 				l1 = new Lattice2D(dimention, degree, problocal,
 						new NormalContagion(threshold, mean, variance));
 				l1.init(community, message);
-				//System.out.print("Initialization Done!");
 
-				if (!hasht.containsKey(problocal)) {
-					valuelist = new ArrayList<Integer>();
-				} else {
-					valuelist = hasht.get(problocal);
-				}
-				int timesteps = l1.Contagions(max);
+				l1.Contagions(max);
 				outputDynamics(l1,"normal",i,problocal,threshold,mean,variance);
-
-				//System.out.println(" " + timesteps);
-				valuelist.add(timesteps);
-
-//				if (lastroundsteps == timesteps) {
-//					break;
-//				} else {
-//					lastroundsteps = timesteps;
-//				}
-				
+			
 			}
 			
 			if (problocal < 0.001) {
@@ -303,15 +255,7 @@ public class NetworkSim {
 			}
 			
 			System.out.print(problocal);
-			hasht.put(problocal, valuelist);
 		}
-		Map<String, Double> map = new HashMap<String, Double>();
-		map.put("threshold", (double) threshold);
-		map.put("community", (double) community);
-		map.put("message", (double) message);
-		map.put("mean", (double) mean);
-		map.put("variance", (double) variance);
-		StardardDeviationCalc(hasht, "normal", map);
 	}
 	
 	public void StardardDeviationCalc(Map<Double, List<Integer>> hasht,

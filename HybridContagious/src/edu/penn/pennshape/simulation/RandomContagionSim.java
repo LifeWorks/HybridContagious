@@ -1,5 +1,7 @@
 package edu.penn.pennshape.simulation;
 
+import java.util.ArrayList;
+
 public class RandomContagionSim extends NetworkSim {
 	public static void main(String[] args) {
 
