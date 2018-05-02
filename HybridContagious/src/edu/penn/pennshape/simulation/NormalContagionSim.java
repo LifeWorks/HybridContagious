@@ -20,7 +20,7 @@ public class NormalContagionSim extends NetworkSim {
 		for (int h=0;h<11;h++) {
 			for (int i=2;i<9;i++) {
 				for (int j=0;j<10;j++) {
-					if (i != 5 || h != 5) {
+					if (i != 5 && h != 5) {
 						threshold = h;
 						mean = i;
 						std = 0.5 + j * 0.5;

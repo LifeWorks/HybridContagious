@@ -234,14 +234,18 @@ public class NetworkSim {
 		
 		while (problocal <= 1.01) {
 			for (int i = 0; i < rounds; i++) {
+				
+				String fileName = "data/normal-" + dimention + "-" + degree + "-" + threshold + "-" + mean + "-" + variance + "/probability-" + problocal + "/dynamics-" + i + ".txt";
+				File f = new File(fileName);
+				if (!f.exists()) {
+					l1 = new Lattice2D(dimention, degree, problocal,
+							new NormalContagion(threshold, mean, variance));
+					l1.init(community, message);
 
-				l1 = new Lattice2D(dimention, degree, problocal,
-						new NormalContagion(threshold, mean, variance));
-				l1.init(community, message);
+					l1.Contagions(max);
+					outputDynamics(l1,"normal",i,problocal,threshold,mean,variance);
+				}
 
-				l1.Contagions(max);
-				outputDynamics(l1,"normal",i,problocal,threshold,mean,variance);
-			
 			}
 			
 			if (problocal < 0.001) {
