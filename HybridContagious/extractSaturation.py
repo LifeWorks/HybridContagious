@@ -20,13 +20,17 @@ import seaborn as sns
 
 from multiprocessing import Pool
 
-resultDir = '/raid/lifeworks/working/simulations/hybridContagion/dataBak'
+resultDir = '/raid/lifeworks/working/simulations/hybridContagion/data'
+# resultDir = '/raid/lifeworks/working/simulations/hybridContagion/indirectContagion'
 newResultDir = '/raid/lifeworks/working/simulations/hybridContagion/results/rawResults/saturationLevel'
 
 dirList = [dirName for dirName in os.listdir(
     resultDir) if not os.path.isfile(os.path.join(resultDir, dirName))]
 
+import ray
 
+
+@ray.remote
 def getLastStep(directory):
     pDirs = [dirName for dirName in os.listdir(os.path.join(
         resultDir, directory)) if not os.path.isfile(os.path.join(resultDir, directory, dirName))]
@@ -42,14 +46,19 @@ def getLastStep(directory):
             allsteps = np.genfromtxt(os.path.join(
                 resultDir, directory, pDir, filename))
             dims = allsteps.shape
+            lastStep = []
             if len(dims) == 2 and dims[1] == 2:
-                lastSteps.append(allsteps[dims[0]-1])
+                lastStep = allsteps[dims[0]-1]
             elif len(dims) == 1 and dims[0] == 2:
-                lastSteps.append(allsteps)
+                lastStep = allsteps
             else:
                 print(directory + '/' + pDir + '/' +
                       filename + ' has wrong dimesion')
                 # sys.exit()
+
+            if lastStep[1] != 0.99:
+                lastStep[0] = 3e7
+            lastSteps.append(lastStep)
         lastSteps = np.array(lastSteps)
         means = np.mean(lastSteps, axis=0)
         stds = np.std(lastSteps, axis=0)
@@ -57,8 +66,15 @@ def getLastStep(directory):
             lastSteps, axis=0)[0], np.amax(lastSteps, axis=0)[0]])
     output = np.array(output)
     np.savetxt(outputfile, output[output[:, 0].argsort()])
+    # return([outputfile, output[output[:, 0].argsort()]])
 
 
-pool = Pool(processes=47)
+# pool = Pool(processes=47)
 
-list(pool.map(getLastStep, dirList))
+
+# list(pool.map(getLastStep, dirList))
+ray.init()
+allOutput = ray.get([getLastStep.remote(dirName) for dirName in dirList])
+
+# for output in allOutput:
+#     np.savetxt(output[0], output[1])
