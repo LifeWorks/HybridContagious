@@ -32,10 +32,9 @@ public class RandomContagion extends Contagion {
 					.get(unreceivedmessagenodesidx);
 			if (checkmessagereceivedNeighbors(selectednode)) {
 				selectednode.setMessagereceived(true);
-				double offset = normaldist.sample();
 				//System.out.println("Offset:"+offset);
 				//System.out.println("SD:"+normaldist.getStandardDeviation()+" Mean:"+normaldist.getMean());
-				if (offset >= selectednode.getThreshold()){
+				if (random.nextDouble() < normaldist.sample()){
 					selectednode.setActived(true);
 				}
 				
