@@ -27,10 +27,10 @@ newResultDir = '/raid/lifeworks/working/simulations/socialContagion/HybridContag
 dirList = [dirName for dirName in os.listdir(
     resultDir) if not os.path.isfile(os.path.join(resultDir, dirName))]
 
-# import ray
+import ray
 
 
-# @ray.remote
+@ray.remote
 def getLastStep(directory):
     pDirs = [dirName for dirName in os.listdir(os.path.join(
         resultDir, directory)) if not os.path.isfile(os.path.join(resultDir, directory, dirName))]
@@ -69,11 +69,5 @@ def getLastStep(directory):
     # return([outputfile, output[output[:, 0].argsort()]])
 
 
-pool = Pool(processes=47)
-list(pool.map(getLastStep, dirList))
-
-# ray.init()
-# allOutput = ray.get([getLastStep.remote(dirName) for dirName in dirList])
-
-# for output in allOutput:
-#     np.savetxt(output[0], output[1])
+ray.init()
+ray.get([getLastStep.remote(dirName) for dirName in dirList])
