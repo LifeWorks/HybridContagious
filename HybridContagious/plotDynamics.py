@@ -78,8 +78,9 @@ def plotDynamics(directory, workingDir, outputDir):
         yaxis = np.zeros(len(xaxis))
         fig = plt.figure()
         plt.yscale('log')
-        plt.ylim(0.001, 1)
-        plt.xlim(0,xaxis.max())
+        plt.ylim(0.0005, 2)
+        plt.xlim(0,3e7)
+        # plt.xlim(0,xaxis.max())
         for replicate in data:
             plt.plot(replicate[0], replicate[1])
             di = 0
@@ -102,8 +103,9 @@ def plotDynamics(directory, workingDir, outputDir):
 
         fig = plt.figure()
         plt.yscale('log')
-        plt.ylim(0.001, 1)
-        plt.xlim(0,xaxis.max())
+        plt.ylim(0.0005, 2)
+        plt.xlim(0,3e7)
+        # plt.xlim(0,xaxis.max())
         plt.plot(xaxis, yaxis)
         fig.savefig(averagePlot,bbox_inches='tight')
         plt.close(fig)
@@ -117,8 +119,9 @@ def plotDynamics(directory, workingDir, outputDir):
 
     fig = plt.figure()
     plt.yscale('log')
-    plt.ylim(0.001, 1)
-    plt.xlim(0,togethx.max())
+    plt.ylim(0.0005, 2)
+    plt.xlim(0,3e7)
+    # plt.xlim(0,togethx.max())
     # labels = []
     for prob in togethdata:
         plt.plot(prob[0], prob[1])
@@ -134,8 +137,9 @@ def plotDynamics(directory, workingDir, outputDir):
 
     fig = plt.figure()
     plt.yscale('log')
-    plt.ylim(0.001, 1)
-    plt.xlim(0,togethx.max())
+    plt.ylim(0.0005, 2)
+    plt.xlim(0,3e7)
+    # plt.xlim(0,togethx.max())
     labels = []
     for prob in togethdata:
         plt.plot(prob[0], prob[1])
