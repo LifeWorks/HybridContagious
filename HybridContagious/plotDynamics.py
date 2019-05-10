@@ -37,21 +37,21 @@ import ray
 def plotDynamics(directory, workingDir, outputDir):
     pDirs = [dirName for dirName in os.listdir(os.path.join(workingDir, directory)) if not os.path.isfile(os.path.join(workingDir, directory, dirName))]
 
-    togetherPlot = outputDir + '/' + directory + '/together-average-' + directory + '.png'
-    togetherPlotNL = outputDir + '/' + directory + '/together-average-NL-' + directory + '.png'
+    togetherPlot = outputDir + '/together-average-' + directory + '.pdf'
+    togetherPlotNL = outputDir + '/together-average-NL-' + directory + '.pdf'
+    outdir = outputDir + '/' + directory
+    try:
+        os.makedirs(outdir)
+    except OSError as e:
+        if e.errno != os.errno.EEXIST:
+            raise
     togethx = np.array([])
     togethdata = []
     for pDir in pDirs:
         matched = re.match('probability-([0-9\.]*)', pDir)
         probability = float(matched.group(1))
-        outdir = outputDir + '/' + directory + '/'+ pDir
-        try:
-            os.makedirs(outdir)
-        except OSError as e:
-            if e.errno != os.errno.EEXIST:
-                raise
-        seperatePlot = outdir + '/seperate-trajectory-' + matched.group(1) + '.png'
-        averagePlot = outdir + '/average-trajectory-' + matched.group(1) + '.png'
+        seperatePlot = outdir + '/seperate-trajectory-' + matched.group(1) + '.pdf'
+        averagePlot = outdir + '/average-trajectory-' + matched.group(1) + '.pdf'
         averageData = outdir + '/average-trajectory-' + matched.group(1) + '.txt'
         fileNames = [filename for filename in os.listdir(os.path.join(workingDir, directory, pDir)) if os.path.isfile(os.path.join(workingDir, directory, pDir, filename))]
         data = []
@@ -110,7 +110,7 @@ def plotDynamics(directory, workingDir, outputDir):
 
         togethx = np.concatenate((togethx,xaxis), axis=None)
         aveData = np.stack((xaxis, yaxis))
-        np.savetxt(aveData, averageData)
+        np.savetxt(averageData, aveData)
         togethdata.append(aveData)
 
     togethx = np.unique(togethx)
