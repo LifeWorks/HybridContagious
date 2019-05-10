@@ -34,9 +34,8 @@ import ray
 
 
 @ray.remote
-def plotDynamics(directory,outputDir):
-    pDirs = [dirName for dirName in os.listdir(os.path.join(
-        workingDir, directory)) if not os.path.isfile(os.path.join(workingDir, directory, dirName))]
+def plotDynamics(directory, workingDir, outputDir):
+    pDirs = [dirName for dirName in os.listdir(os.path.join(workingDir, directory)) if not os.path.isfile(os.path.join(workingDir, directory, dirName))]
 
     togetherPlot = outputDir + '/' + directory + '/together-average-' + directory + '.png'
     togetherPlotNL = outputDir + '/' + directory + '/together-average-NL-' + directory + '.png'
@@ -60,6 +59,9 @@ def plotDynamics(directory,outputDir):
         xaxis = np.array([])
         for filename in fileNames:
             allsteps = np.genfromtxt(os.path.join(workingDir, directory, pDir, filename)).transpose()
+            dims = allsteps.shape
+            if len(dims) == 1 and dims[0] == 2:
+                allsteps = np.array([allsteps])
             tempMax = allsteps[0].max()
             if tempMax > maxStep:
                 maxStep = tempMax
@@ -75,7 +77,7 @@ def plotDynamics(directory,outputDir):
         for replicate in data:
             plt.plot(replicate[0], replicate[1])
             di = 0
-            for ai in len(xaxis):
+            for ai in range(len(xaxis)):
                 if di >= len(replicate[0]):
                     yaxis[ai] += replicate[1,-1]
                 else:
@@ -149,13 +151,13 @@ workingDir = directResults
 outputDir = directOutputs
 
 dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
-ray.get([plotDynamics.remote(dirName, outputDir) for dirName in dirList])
+ray.get([plotDynamics.remote(dirName, workingDir, outputDir) for dirName in dirList])
 
 workingDir = indirectResults
 outputDir = indirectOutputs
 
 dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
-ray.get([plotDynamics.remote(dirName, outputDir) for dirName in dirList])
+ray.get([plotDynamics.remote(dirName, workingDir, outputDir) for dirName in dirList])
 
 
 # test
