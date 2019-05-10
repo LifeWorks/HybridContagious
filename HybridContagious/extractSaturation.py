@@ -22,7 +22,7 @@ from multiprocessing import Pool
 
 resultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/rawResults'
 # resultDir = '/raid/lifeworks/working/simulations/hybridContagion/indirectContagion'
-newResultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/results/dynamics'
+newResultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/results/analysed'
 
 directResults = resultDir + '/directContagion'
 indirectResults = resultDir + '/indirectContagion'

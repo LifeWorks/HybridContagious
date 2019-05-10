@@ -78,9 +78,9 @@ def plotDynamics(directory, workingDir, outputDir):
         yaxis = np.zeros(len(xaxis))
         fig = plt.figure()
         plt.yscale('log')
-        plt.ylim(0.0005, 2)
-        plt.xlim(0,3e7)
-        # plt.xlim(0,xaxis.max())
+        plt.ylim(0.0001, 2)
+        # plt.xlim(0,3e7)
+        plt.xlim(0,xaxis.max())
         for replicate in data:
             plt.plot(replicate[0], replicate[1])
             di = 0
@@ -103,9 +103,9 @@ def plotDynamics(directory, workingDir, outputDir):
 
         fig = plt.figure()
         plt.yscale('log')
-        plt.ylim(0.0005, 2)
-        plt.xlim(0,3e7)
-        # plt.xlim(0,xaxis.max())
+        plt.ylim(0.0001, 2)
+        # plt.xlim(0,3e7)
+        plt.xlim(0,xaxis.max())
         plt.plot(xaxis, yaxis)
         fig.savefig(averagePlot,bbox_inches='tight')
         plt.close(fig)
@@ -119,34 +119,33 @@ def plotDynamics(directory, workingDir, outputDir):
 
     fig = plt.figure()
     plt.yscale('log')
-    plt.ylim(0.0005, 2)
-    plt.xlim(0,3e7)
-    # plt.xlim(0,togethx.max())
+    plt.ylim(0.0001, 2)
+    # plt.xlim(0,3e7)
+    plt.xlim(0,togethx.max())
     for prob in togethdata:
         plt.plot(prob[0][0], prob[0][1])
 
     fig.savefig(togetherPlotNL,bbox_inches='tight')
     plt.close(fig)
 
-    fig = plt.figure()
-    plt.yscale('log')
-    plt.ylim(0.0005, 2)
-    plt.xlim(0,3e7)
+    # fig = plt.figure()
+    # plt.yscale('log')
+    # plt.ylim(0.0001, 2)
+    # # plt.xlim(0,3e7)
     # plt.xlim(0,togethx.max())
-    labels = []
-    for prob in togethdata:
-        plt.plot(prob[0][0], prob[0][1])
-        labels.append(r'$p = %f$' % (prob[1]))
+    # labels = []
+    # for prob in togethdata:
+    #     plt.plot(prob[0][0], prob[0][1])
+    #     labels.append(r'$p = %f$' % (prob[1]))
 
-    plt.legend(labels, ncol=4, loc='upper center', 
-            bbox_to_anchor=[0.5, 1.1],
-            columnspacing=1.0, labelspacing=0.0,
-            handletextpad=0.0, handlelength=1.5,
-            fancybox=True, shadow=True)
-    fig.savefig(togetherPlot,bbox_inches='tight')
-    plt.close(fig)
+    # plt.legend(labels, ncol=4, loc='upper center', 
+    #         bbox_to_anchor=[0.5, 1.1],
+    #         columnspacing=1.0, labelspacing=0.0,
+    #         handletextpad=0.0, handlelength=1.5,
+    #         fancybox=True, shadow=True)
+    # fig.savefig(togetherPlot,bbox_inches='tight')
+    # plt.close(fig)
 
-    print('successful')
 
 ray.init()
 
@@ -155,12 +154,14 @@ outputDir = directOutputs
 
 dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
 ray.get([plotDynamics.remote(dirName, workingDir, outputDir) for dirName in dirList])
+print('successful')
 
 workingDir = indirectResults
 outputDir = indirectOutputs
 
 dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
 ray.get([plotDynamics.remote(dirName, workingDir, outputDir) for dirName in dirList])
+print('successful')
 
 
 # test
