@@ -20,12 +20,17 @@ import seaborn as sns
 
 from multiprocessing import Pool
 
-resultDir = '/raid/lifeworks/working/simulations/socialContagion/HybridContagious/HybridContagious/data'
+resultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/rawResults'
 # resultDir = '/raid/lifeworks/working/simulations/hybridContagion/indirectContagion'
-newResultDir = '/raid/lifeworks/working/simulations/socialContagion/HybridContagious/HybridContagious/results'
+newResultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/results/dynamics'
+
+directResults = resultDir + '/directContagion'
+indirectResults = resultDir + '/indirectContagion'
+
+workingDir = directResults
 
 dirList = [dirName for dirName in os.listdir(
-    resultDir) if not os.path.isfile(os.path.join(resultDir, dirName))]
+    workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
 
 import ray
 
