@@ -58,10 +58,16 @@ def plotDynamics(directory, workingDir, outputDir):
         maxStep = 0
         xaxis = np.array([])
         for filename in fileNames:
-            allsteps = np.genfromtxt(os.path.join(workingDir, directory, pDir, filename)).transpose()
+            allsteps = np.genfromtxt(os.path.join(workingDir, directory, pDir, filename))
             dims = allsteps.shape
-            if len(dims) == 1 and dims[0] == 2:
-                allsteps = np.array([allsteps])
+            if len(dims) == 2 and dims[1] == 2:
+                allsteps = np.transpose(allsteps)
+            elif len(dims) == 1 and dims[0] == 2:
+                allsteps = np.array([allsteps]).transpose()
+            else:
+                print(directory + '/' + pDir + '/' + filename + ' has wrong dimesion')
+                # sys.exit()
+
             tempMax = allsteps[0].max()
             if tempMax > maxStep:
                 maxStep = tempMax
