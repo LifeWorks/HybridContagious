@@ -113,7 +113,7 @@ def plotDynamics(directory, workingDir, outputDir):
         togethx = np.concatenate((togethx,xaxis), axis=None)
         aveData = np.stack((xaxis, yaxis))
         np.savetxt(averageData, aveData)
-        togethdata.append(aveData)
+        togethdata.append([aveData,probability])
 
     togethx = np.unique(togethx)
 
@@ -122,16 +122,9 @@ def plotDynamics(directory, workingDir, outputDir):
     plt.ylim(0.0005, 2)
     plt.xlim(0,3e7)
     # plt.xlim(0,togethx.max())
-    # labels = []
     for prob in togethdata:
-        plt.plot(prob[0], prob[1])
-        # labels.append(r'$p = %f$' % (probability))
+        plt.plot(prob[0][0], prob[0][1])
 
-    # plt.legend(labels, ncol=4, loc='upper center', 
-    #         bbox_to_anchor=[0.5, 1.1],
-    #         columnspacing=1.0, labelspacing=0.0,
-    #         handletextpad=0.0, handlelength=1.5,
-    #         fancybox=True, shadow=True)
     fig.savefig(togetherPlotNL,bbox_inches='tight')
     plt.close(fig)
 
@@ -142,8 +135,8 @@ def plotDynamics(directory, workingDir, outputDir):
     # plt.xlim(0,togethx.max())
     labels = []
     for prob in togethdata:
-        plt.plot(prob[0], prob[1])
-        labels.append(r'$p = %f$' % (probability))
+        plt.plot(prob[0][0], prob[0][1])
+        labels.append(r'$p = %f$' % (prob[1]))
 
     plt.legend(labels, ncol=4, loc='upper center', 
             bbox_to_anchor=[0.5, 1.1],
