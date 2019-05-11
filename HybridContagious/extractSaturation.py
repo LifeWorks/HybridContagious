@@ -22,34 +22,32 @@ from multiprocessing import Pool
 
 resultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/rawResults'
 # resultDir = '/raid/lifeworks/working/simulations/hybridContagion/indirectContagion'
-newResultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/results/analysed'
+newResultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/results/saturation'
 
 directResults = resultDir + '/directContagion'
 indirectResults = resultDir + '/indirectContagion'
+directOutputs = newResultDir + '/directContagion'
+indirectOutputs = newResultDir + '/indirectContagion'
 
-workingDir = directResults
-
-dirList = [dirName for dirName in os.listdir(
-    workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
 
 import ray
 
 
 @ray.remote
-def getLastStep(directory):
+def getLastStep(directory, workingDir, outputDir):
     pDirs = [dirName for dirName in os.listdir(os.path.join(
-        resultDir, directory)) if not os.path.isfile(os.path.join(resultDir, directory, dirName))]
-    outputfile = newResultDir + '/' + directory + '.txt'
+        workingDir, directory)) if not os.path.isfile(os.path.join(workingDir, directory, dirName))]
+    outputfile = outputDir + '/' + directory + '.txt'
     output = []
     for pDir in pDirs:
         matched = re.match('probability-([0-9\.]*)', pDir)
         prob = float(matched.group(1))
         fileNames = [filename for filename in os.listdir(os.path.join(
-            resultDir, directory, pDir)) if os.path.isfile(os.path.join(resultDir, directory, pDir, filename))]
+            workingDir, directory, pDir)) if os.path.isfile(os.path.join(workingDir, directory, pDir, filename))]
         lastSteps = []
         for filename in fileNames:
             allsteps = np.genfromtxt(os.path.join(
-                resultDir, directory, pDir, filename))
+                workingDir, directory, pDir, filename))
             dims = allsteps.shape
             lastStep = []
             if len(dims) == 2 and dims[1] == 2:
@@ -75,4 +73,17 @@ def getLastStep(directory):
 
 
 ray.init()
-ray.get([getLastStep.remote(dirName) for dirName in dirList])
+
+workingDir = directResults
+outputDir = directOutputs
+dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
+
+ray.get([getLastStep.remote(dirName, workingDir, outputDir) for dirName in dirList])
+print('successful')
+
+workingDir = indirectResults
+outputDir = indirectOutputs
+dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
+
+ray.get([getLastStep.remote(dirName, workingDir, outputDir) for dirName in dirList])
+print('successful')
