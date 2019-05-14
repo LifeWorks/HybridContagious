@@ -146,18 +146,18 @@ def extractRates(directory, workingDir, outputDir):
 
 ray.init()
 
-workingDir = directResults
-outputDir = directOutputs
-dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
+# workingDir = directResults
+# outputDir = directOutputs
+# dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
 
-ray.get([extractRates.remote(dirName, workingDir, outputDir) for dirName in dirList])
-print('successful')
+# raySults = ray.get([extractRates.remote(dirName, workingDir, outputDir) for dirName in dirList])
+# print('successful')
 
 workingDir = indirectResults
 outputDir = indirectOutputs
 dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
 
-ray.get([extractRates.remote(dirName, workingDir, outputDir) for dirName in dirList])
+raySults = ray.get([extractRates.remote(dirName, workingDir, outputDir) for dirName in dirList])
 print('successful')
 
 
