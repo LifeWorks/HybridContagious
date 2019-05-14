@@ -22,7 +22,7 @@ from multiprocessing import Pool
 
 resultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/rawResults'
 # resultDir = '/raid/lifeworks/working/simulations/hybridContagion/indirectContagion'
-newResultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/results/maxrates'
+newResultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/results/derivatives'
 
 directResults = resultDir + '/directContagion'
 indirectResults = resultDir + '/indirectContagion'
@@ -51,9 +51,9 @@ def extractRates(directory, workingDir, outputDir):
     for pDir in pDirs:
         matched = re.match('probability-([0-9\.]*)', pDir)
         probability = float(matched.group(1))
-        # seperatePlot = outdir + '/seperate-trajectory-rates-' + matched.group(1) + '.pdf'
-        # averagePlot = outdir + '/average-trajectory-rates-' + matched.group(1) + '.pdf'
-        # averageData = outdir + '/average-trajectory-rates-' + matched.group(1) + '.txt'
+        seperatePlot = outdir + '/seperate-trajectory-rates-' + matched.group(1) + '.pdf'
+        averagePlot = outdir + '/average-trajectory-rates-' + matched.group(1) + '.pdf'
+        averageData = outdir + '/average-trajectory-rates-' + matched.group(1) + '.txt'
         fileNames = [filename for filename in os.listdir(os.path.join(workingDir, directory, pDir)) if os.path.isfile(os.path.join(workingDir, directory, pDir, filename))]
         data = []
         maxStep = 0
@@ -79,11 +79,11 @@ def extractRates(directory, workingDir, outputDir):
         steps = len(xaxis)
         yaxis = np.zeros(steps)
         dxaxis = (xaxis[1:] + xaxis[:-1]) / 2
-        # fig = plt.figure()
-        # # plt.yscale('log')
-        # # plt.ylim(0.0001, 2)
-        # # plt.xlim(0,3e7)
-        # plt.xlim(0,xaxis.max())
+        fig = plt.figure()
+        # plt.yscale('log')
+        # plt.ylim(0.0001, 2)
+        # plt.xlim(0,3e7)
+        plt.xlim(0,xaxis.max())
         for replicate in data:
             tempy = np.zeros(steps)
             di = 0
@@ -102,26 +102,26 @@ def extractRates(directory, workingDir, outputDir):
                     else:
                         print('something went wrong, ax is larger than dx')
             tempdy = np.diff(tempy)/np.diff(xaxis)
-            # plt.plot(dxaxis, tempdy)
-        # plt.show()
-        # fig.savefig(seperatePlot,bbox_inches='tight')
-        # plt.close(fig)
+            plt.plot(dxaxis, tempdy)
+        #plt.show()
+        fig.savefig(seperatePlot,bbox_inches='tight')
+        plt.close(fig)
 
         yaxis /= len(data)
         dyaxis = np.diff(yaxis)/np.diff(xaxis)
 
-        # fig = plt.figure()
-        # # plt.yscale('log')
-        # # plt.ylim(0.0001, 2)
-        # # plt.xlim(0,3e7)
-        # plt.xlim(0,xaxis.max())
-        # plt.plot(dxaxis, dyaxis)
-        # fig.savefig(averagePlot,bbox_inches='tight')
-        # plt.close(fig)
+        fig = plt.figure()
+        # plt.yscale('log')
+        # plt.ylim(0.0001, 2)
+        # plt.xlim(0,3e7)
+        plt.xlim(0,xaxis.max())
+        plt.plot(dxaxis, dyaxis)
+        fig.savefig(averagePlot,bbox_inches='tight')
+        plt.close(fig)
 
         togethx = np.concatenate((togethx,dxaxis), axis=None)
         aveData = np.stack((dxaxis, dyaxis))
-        # np.savetxt(averageData, aveData)
+        np.savetxt(averageData, aveData)
         togethdata.append([aveData,probability])
 
         maxrate = dyaxis.max()
@@ -143,17 +143,15 @@ def extractRates(directory, workingDir, outputDir):
     fig.savefig(togetherPlot,bbox_inches='tight')
     plt.close(fig)
 
-    return(0)
-
 
 ray.init()
 
-workingDir = directResults
-outputDir = directOutputs
-dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
+# workingDir = directResults
+# outputDir = directOutputs
+# dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
 
-raySults = ray.get([extractRates.remote(dirName, workingDir, outputDir) for dirName in dirList])
-print('successful')
+# raySults = ray.get([extractRates.remote(dirName, workingDir, outputDir) for dirName in dirList])
+# print('successful')
 
 workingDir = indirectResults
 outputDir = indirectOutputs
