@@ -22,7 +22,7 @@ from multiprocessing import Pool
 
 resultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/rawResults'
 # resultDir = '/raid/lifeworks/working/simulations/hybridContagion/indirectContagion'
-newResultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/results/dynamics'
+newResultDir = '/raid/lifeworks/working/simulations/socialContagion/bak/results/rates'
 
 directResults = resultDir + '/directContagion'
 indirectResults = resultDir + '/indirectContagion'
@@ -34,7 +34,7 @@ import ray
 
 
 @ray.remote
-def plotDynamics(directory, workingDir, outputDir):
+def extractRates(directory, workingDir, outputDir):
     pDirs = [dirName for dirName in os.listdir(os.path.join(workingDir, directory)) if not os.path.isfile(os.path.join(workingDir, directory, dirName))]
 
     togetherPlot = outputDir + '/together-average-rates' + directory + '.pdf'
@@ -150,14 +150,14 @@ workingDir = directResults
 outputDir = directOutputs
 dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
 
-ray.get([plotDynamics.remote(dirName, workingDir, outputDir) for dirName in dirList])
+ray.get([extractRates.remote(dirName, workingDir, outputDir) for dirName in dirList])
 print('successful')
 
 workingDir = indirectResults
 outputDir = indirectOutputs
 dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
 
-ray.get([plotDynamics.remote(dirName, workingDir, outputDir) for dirName in dirList])
+ray.get([extractRates.remote(dirName, workingDir, outputDir) for dirName in dirList])
 print('successful')
 
 
