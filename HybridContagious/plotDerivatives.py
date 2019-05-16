@@ -37,17 +37,17 @@ import ray
 def extractRates(directory, workingDir, outputDir):
     pDirs = [dirName for dirName in os.listdir(os.path.join(workingDir, directory)) if not os.path.isfile(os.path.join(workingDir, directory, dirName))]
 
-    togetherPlot = outputDir + '/together-average-rates' + directory + '.pdf'
+    # togetherPlot = outputDir + '/together-average-rates' + directory + '.pdf'
     outdir = outputDir + '/' + directory
     try:
         os.makedirs(outdir)
     except OSError as e:
         if e.errno != os.errno.EEXIST:
             raise
-    togethx = np.array([])
-    togethdata = []
-    outputfile = outputDir + '/' + directory + '.txt'
-    output = []
+    # togethx = np.array([])
+    # togethdata = []
+    # outputfile = outputDir + '/' + directory + '.txt'
+    # output = []
     for pDir in pDirs:
         matched = re.match('probability-([0-9\.]*)', pDir)
         probability = float(matched.group(1))
@@ -119,39 +119,39 @@ def extractRates(directory, workingDir, outputDir):
         fig.savefig(averagePlot,bbox_inches='tight')
         plt.close(fig)
 
-        togethx = np.concatenate((togethx,dxaxis), axis=None)
+        # togethx = np.concatenate((togethx,dxaxis), axis=None)
         aveData = np.stack((dxaxis, dyaxis))
         np.savetxt(averageData, aveData)
-        togethdata.append([aveData,probability])
+        # togethdata.append([aveData,probability])
 
-        maxrate = dyaxis.max()
-        output.append([probability, maxrate])
+        # maxrate = dyaxis.max()
+        # output.append([probability, maxrate])
 
-    output = np.array(output)
-    np.savetxt(outputfile, output[output[:, 0].argsort()])
+    # output = np.array(output)
+    # np.savetxt(outputfile, output[output[:, 0].argsort()])
 
-    togethx = np.unique(togethx)
+    # togethx = np.unique(togethx)
 
-    fig = plt.figure()
-    # plt.yscale('log')
-    # plt.ylim(0.0001, 2)
-    # plt.xlim(0,3e7)
-    plt.xlim(0,togethx.max())
-    for prob in togethdata:
-        plt.plot(prob[0][0], prob[0][1])
+    # fig = plt.figure()
+    # # plt.yscale('log')
+    # # plt.ylim(0.0001, 2)
+    # # plt.xlim(0,3e7)
+    # plt.xlim(0,togethx.max())
+    # for prob in togethdata:
+    #     plt.plot(prob[0][0], prob[0][1])
 
-    fig.savefig(togetherPlot,bbox_inches='tight')
-    plt.close(fig)
+    # fig.savefig(togetherPlot,bbox_inches='tight')
+    # plt.close(fig)
 
 
 ray.init()
 
-# workingDir = directResults
-# outputDir = directOutputs
-# dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
+workingDir = directResults
+outputDir = directOutputs
+dirList = [dirName for dirName in os.listdir(workingDir) if not os.path.isfile(os.path.join(workingDir, dirName))]
 
-# raySults = ray.get([extractRates.remote(dirName, workingDir, outputDir) for dirName in dirList])
-# print('successful')
+raySults = ray.get([extractRates.remote(dirName, workingDir, outputDir) for dirName in dirList])
+print('successful')
 
 workingDir = indirectResults
 outputDir = indirectOutputs
