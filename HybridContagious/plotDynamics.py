@@ -51,8 +51,8 @@ def plotDynamics(directory, workingDir, outputDir):
         matched = re.match('probability-([0-9\.]*)', pDir)
         probability = float(matched.group(1))
         seperatePlot = outdir + '/seperate-trajectory-' + matched.group(1) + '.pdf'
-        averagePlot = outdir + '/average-trajectory-' + matched.group(1) + '.pdf'
-        averageData = outdir + '/average-trajectory-' + matched.group(1) + '.txt'
+        # averagePlot = outdir + '/average-trajectory-' + matched.group(1) + '.pdf'
+        # averageData = outdir + '/average-trajectory-' + matched.group(1) + '.txt'
         fileNames = [filename for filename in os.listdir(os.path.join(workingDir, directory, pDir)) if os.path.isfile(os.path.join(workingDir, directory, pDir, filename))]
         data = []
         maxStep = 0
@@ -101,18 +101,18 @@ def plotDynamics(directory, workingDir, outputDir):
 
         yaxis /= len(data)
 
-        fig = plt.figure()
-        plt.yscale('log')
-        plt.ylim(0.0001, 2)
-        # plt.xlim(0,3e7)
-        plt.xlim(0,xaxis.max())
-        plt.plot(xaxis, yaxis)
-        fig.savefig(averagePlot,bbox_inches='tight')
-        plt.close(fig)
+        # fig = plt.figure()
+        # plt.yscale('log')
+        # plt.ylim(0.0001, 2)
+        # # plt.xlim(0,3e7)
+        # plt.xlim(0,xaxis.max())
+        # plt.plot(xaxis, yaxis)
+        # fig.savefig(averagePlot,bbox_inches='tight')
+        # plt.close(fig)
 
         togethx = np.concatenate((togethx,xaxis), axis=None)
-        aveData = np.stack((xaxis, yaxis))
-        np.savetxt(averageData, aveData)
+        # aveData = np.stack((xaxis, yaxis))
+        # np.savetxt(averageData, aveData)
         togethdata.append([aveData,probability])
 
     togethx = np.unique(togethx)
