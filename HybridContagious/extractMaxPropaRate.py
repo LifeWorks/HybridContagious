@@ -38,12 +38,12 @@ def extractRates(directory, workingDir, outputDir):
     pDirs = [dirName for dirName in os.listdir(os.path.join(workingDir, directory)) if not os.path.isfile(os.path.join(workingDir, directory, dirName))]
 
     togetherPlot = outputDir + '/together-average-rates' + directory + '.pdf'
-    outdir = outputDir + '/' + directory
-    try:
-        os.makedirs(outdir)
-    except OSError as e:
-        if e.errno != os.errno.EEXIST:
-            raise
+    # outdir = outputDir + '/' + directory
+    # try:
+    #     os.makedirs(outdir)
+    # except OSError as e:
+    #     if e.errno != os.errno.EEXIST:
+    #         raise
     togethx = np.array([])
     togethdata = []
     outputfile = outputDir + '/' + directory + '.txt'
